@@ -1,0 +1,210 @@
+
+    body {
+      font-family: Arial, sans-serif;
+      padding: 0;
+      margin: 0;
+      background: #f4f4f4;
+    }
+
+
+.bcasentries {  
+  display: block;
+  max-height: 500px; /* Set the height to enable scrolling */
+  overflow: auto;  /* Enable vertical scrolling for the body */
+  width: auto; 
+  
+  box-shadow: none;
+  background-color: white; 
+  border-collapse: collapse;
+  border: 1px solid black;
+  border-color: rgb(221, 217, 217);
+  
+}
+
+.bcasentries th {
+  background-color:#8b8bde;  
+  width: 100%;
+  margin-top:0;
+  font-size: 12px;
+  color: white;
+  font-weight:lighter;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  height: 0px;
+  text-align: left;
+  padding-right: 15px;
+   
+
+}
+
+.bcasentries td{
+  height: 0; 
+  margin-top:0; 
+  font-size: 12px;
+  border-bottom: 1px solid #ddd;
+  padding: 0;
+  padding-right: 15px;
+}
+
+
+
+#employeetable td:first-child,
+#employeetable th:first-child {
+    width: 50px;
+   
+}
+
+.bcasentries td:first-child,
+.bcasentries th:first-child {
+padding-left: 5px;
+}
+
+
+
+.button-blue {
+  width: 80px;
+  color: white;
+  background-color: rgb(129, 129, 245);
+  border: 1px solid rgb(129, 129, 245);
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 4px; /* Optional: makes corners slightly rounded */
+}
+
+.button-blue:hover {
+  background-color: rgb(107, 107, 211);  
+}
+
+.button-blue:active {
+  background-color: rgb(129, 129, 245);
+}
+
+
+
+
+
+.dropdown {
+            position: relative;
+            width: 200px;
+        }
+
+        /* Style the input field */
+        .dropdown input {
+            width: 100%;
+            padding: 10px;
+            padding-right: 30px; /* Create space for the arrow */
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid red;
+            box-sizing: border-box;
+            background-color: white;
+        }
+
+        /* Style for the arrow */
+        .dropdown .arrow {
+            position: absolute;
+            top: 60%;
+            right: 10px;
+            transform: translateY(-50%);
+            pointer-events: none; /* Prevent the arrow from interfering with clicks */
+            font-size: 30px;
+            color: #ccc;
+        }
+
+        /* Style the dropdown list */
+        .dropdown-list {
+            display: none;
+            position: absolute;
+            top: 35px;
+            width: 100%;
+            background-color: #ccc;
+            border: 1px solid white;
+            border-radius: 5px;
+            max-height: 170px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .dropdown-list div {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .dropdown-list div:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Highlight selected item */
+        .selected {
+            background-color: #d1e7dd;
+        }
+
+   .row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 0px;
+    }
+
+    .calculator {
+      width: 480px;
+      margin: 0 auto;
+      padding: 10px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(132, 25, 25, 0.1);
+    }
+    input[type="number"] {
+      width: 100%;
+      margin: 2px;
+      padding: 2px;
+      font-size: 12px;
+    }
+    select, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    #result {
+      font-weight: bold;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    #notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: orange;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 4px;
+    z-index: 9999;
+    font-family: sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeInOut 4s ease-in-out forwards;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    max-width: 370px;
+  }
+
+  #notification .icon {
+    font-size: 18px;
+    line-height: 1.4;
+  }
+
+  #notification .message {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-10px); }
+  }
+

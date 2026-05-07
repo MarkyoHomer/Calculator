@@ -1,0 +1,117 @@
+/* Sidebar Styles */
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100vh;
+  background: linear-gradient(180deg, #6b6bd9 0%, #8b8bde 100%);
+  color: white;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 20px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  padding-left: 25px;
+}
+
+.sidebar-link.active {
+  background: rgba(255, 255, 255, 0.25);
+  border-left: 4px solid #fff;
+  font-weight: bold;
+}
+
+.sidebar-icon {
+  font-size: 18px;
+  margin-right: 12px;
+  width: 24px;
+  text-align: center;
+}
+
+.sidebar-text {
+  flex: 1;
+}
+
+/* Main Content Area */
+.main-content {
+  margin-left: 220px;
+  padding: 20px;
+  width: calc(100% - 220px);
+  box-sizing: border-box;
+}
+
+/* Adjust calculator container for sidebar */
+.calculator {
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
+  }
+  
+  .sidebar-header h3 {
+    display: none;
+  }
+  
+  .sidebar-text {
+    display: none;
+  }
+  
+  .sidebar-link {
+    justify-content: center;
+    padding: 15px 10px;
+  }
+  
+  .sidebar-icon {
+    margin-right: 0;
+  }
+  
+  .main-content {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+  }
+}
