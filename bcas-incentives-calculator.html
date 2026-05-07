@@ -42,6 +42,11 @@
       margin-left: 0 !important;
     }
     
+    /* Count input fields - responsive sizing */
+    .count-input {
+      box-sizing: border-box;
+    }
+    
     /* Fixed size for delete button */
     #employeetable button {
       min-width: 20px !important;
@@ -72,6 +77,19 @@
       
       #totalIncentives {
         margin-left: 0 !important;
+      }
+      
+      /* Make inputs fill available space in fulltime mode (when PM column is hidden) */
+      #PEPPbracket .count-input {
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 80px !important;
+      }
+      
+      /* When PM column is visible (halfday mode), keep inputs smaller */
+      #PEPPbracket tbody td[id$="C2"]:not([style*="display: none"]) + td .count-input,
+      #PEPPbracket tbody td[id$="C2"][style*="display: table-cell"] ~ td .count-input {
+        max-width: 120px !important;
       }
     }
     
@@ -116,6 +134,15 @@
       .button-blue {
         height: 28px !important;
         font-size: 11px !important;
+      }
+      
+      /* Ensure inputs are wide enough in mobile fulltime mode */
+      #PEPPbracket .count-input {
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 90px !important;
+        font-size: 12px !important;
+        height: 28px !important;
       }
     }
   </style>
@@ -222,60 +249,60 @@
         <tr id="R1" style="display: none;">
           <td id="p1"> 01-100 </td>
           <td id="R1C1" style="text-align: right;">
-            <input type="number" id="num1" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num1" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: inline-block; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
           <td id="R1C2" style="text-align: right;">
-            <input type="number" id="num12" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num12" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: none; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
         </tr>
 
         <tr id="R2" style="display: none;">
           <td id="p2"> 101-200 </td>
           <td id="R2C1" style="text-align: right;">
-            <input type="number" id="num2" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num2" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: inline-block; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
           <td id="R2C2" style="text-align: right;">
-            <input type="number" id="num22" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num22" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: none; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
         </tr>
 
         <tr id="R3" style="display: none;">
           <td id="p3"> 201-300 </td>
           <td id="R3C1" style="text-align: right;">
-            <input type="number" id="num3" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num3" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: inline-block; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
           <td id="R3C2" style="text-align: right;">
-            <input type="number" id="num32" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num32" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: none; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
         </tr>
 
         <tr id="R4" style="display: none;">
           <td id="p4"> 301-500 </td>
           <td id="R4C1" style="text-align: right;">
-            <input type="number" id="num4" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num4" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: inline-block; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
           <td id="R4C2" style="text-align: right;">
-            <input type="number" id="num42" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num42" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: none; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
         </tr>
 
         <tr id="R5" style="display: none;">
           <td id="p5"> 501-1000 </td>
           <td id="R5C1" style="text-align: right;">
-            <input type="number" id="num5" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num5" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: inline-block; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
           <td id="R5C2" style="text-align: right;">
-            <input type="number" id="num52" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num52" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: none; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
         </tr>
 
         <tr id="R6" style="display: none;">
           <td id="p6"> 1001-999999 </td>
           <td id="R6C1" style="text-align: right;">
-            <input type="number" id="num6" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num6" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: inline-block; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
           <td id="R6C2" style="text-align: right;">
-            <input type="number" id="num62" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+            <input type="number" id="num62" placeholder="0.00" oninput="computetotal()" class="count-input" style="display: none; width: 100%; max-width: 120px; font-size: 12px; height: 24px;">
           </td>
         </tr>
       </tbody>
