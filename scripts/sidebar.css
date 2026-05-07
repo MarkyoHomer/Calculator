@@ -18,6 +18,7 @@ body {
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   overflow-y: auto;
+  transition: transform 0.3s ease;
 }
 
 .sidebar-header {
@@ -80,6 +81,7 @@ body {
   padding: 20px;
   width: calc(100% - 220px);
   box-sizing: border-box;
+  transition: margin-left 0.3s ease, width 0.3s ease;
 }
 
 /* Adjust calculator container for sidebar */
@@ -87,31 +89,95 @@ body {
   margin: 0 auto;
 }
 
+/* Mobile Hamburger Button */
+.mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  background: linear-gradient(180deg, #6b6bd9 0%, #8b8bde 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mobile-menu-btn span {
+  display: block;
+  width: 22px;
+  height: 3px;
+  background: white;
+  margin: 4px 0;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-btn.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.mobile-menu-btn.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-btn.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Mobile Overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block;
+  }
+
   .sidebar {
-    width: 60px;
+    transform: translateX(-100%);
+    width: 250px;
   }
-  
-  .sidebar-header h3 {
-    display: none;
+
+  .sidebar.open {
+    transform: translateX(0);
   }
-  
-  .sidebar-text {
-    display: none;
-  }
-  
-  .sidebar-link {
-    justify-content: center;
-    padding: 15px 10px;
-  }
-  
-  .sidebar-icon {
-    margin-right: 0;
-  }
-  
+
   .main-content {
-    margin-left: 60px;
-    width: calc(100% - 60px);
+    margin-left: 0;
+    width: 100%;
+    padding: 70px 15px 15px 15px;
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+  }
+
+  /* Adjust calculator width for mobile */
+  .calculator {
+    width: 100%;
+    max-width: 480px;
+  }
+}
+
+@media (min-width: 769px) {
+  .sidebar-overlay {
+    display: none !important;
   }
 }
