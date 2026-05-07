@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Rental Tax Calculator</title>
   <link rel="stylesheet" href="scripts/general.css">
   <link rel="stylesheet" href="scripts/sidebar.css">
@@ -107,6 +108,56 @@
       border: 1px solid #d5cff5;
       border-radius: 4px;
       padding: 5px 8px;
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      .field-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .field-row label {
+        width: 100% !important;
+      }
+      .field-row input[type="number"] {
+        width: 100% !important;
+      }
+      .ledger-row .l-value {
+        min-width: 80px;
+      }
+      .input-toggle {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .scenario-select {
+        font-size: 11px !important;
+        padding: 5px 6px !important;
+      }
+      .ledger {
+        font-size: 11px;
+        padding: 4px 8px;
+      }
+      .ledger-row .l-value {
+        font-size: 11px;
+        min-width: 70px;
+      }
+      .field-row label {
+        font-size: 11px;
+      }
+      .field-row input[type="number"] {
+        font-size: 11px !important;
+      }
+      .input-toggle {
+        font-size: 11px;
+        padding: 4px 6px;
+      }
+      .formula-box {
+        font-size: 10px;
+        padding: 6px 8px;
+      }
+    }
     }
     .input-toggle span { font-weight: bold; color: #555; margin-right: 4px; }
     .input-toggle label {
