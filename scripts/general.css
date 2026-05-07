@@ -46,7 +46,13 @@
   padding-right: 15px;
 }
 
-
+/* Allow text wrapping in employee role column for desktop */
+#employeetable td:nth-child(2),
+#employeetable th:nth-child(2) {
+  white-space: normal;
+  word-break: break-word;
+  max-width: 150px;
+}
 
 #employeetable td:first-child,
 #employeetable th:first-child {
