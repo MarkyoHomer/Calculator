@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculators</title>
+  <link rel="stylesheet" href="scripts/general.css">
+  <link rel="stylesheet" href="scripts/sidebar.css">
+  <style>
+    .welcome-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: calc(100vh - 40px);
+      text-align: center;
+      color: #555;
+    }
+    .welcome-container h2 {
+      color: #8b8bde;
+      margin-bottom: 20px;
+    }
+    .welcome-container p {
+      font-size: 14px;
+      color: #777;
+      max-width: 400px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <h3>Calculators</h3>
+  </div>
+  <ul class="sidebar-menu">
+    <li class="sidebar-item">
+      <a href="index.html" class="sidebar-link active">
+        <span class="sidebar-icon">🏠</span>
+        <span class="sidebar-text">Home</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a href="bcas-incentives-calculator.html" class="sidebar-link">
+        <span class="sidebar-icon">💰</span>
+        <span class="sidebar-text">BCAS Incentives</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a href="rental-tax-calculator.html" class="sidebar-link">
+        <span class="sidebar-icon">📊</span>
+        <span class="sidebar-text">Rental Tax</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="welcome-container">
+    <h2>Welcome to the Calculators Hub</h2>
+    <p>Select a calculator from the sidebar on the left to get started. You can compute BCAS incentives or calculate rental taxes with various scenarios.</p>
+  </div>
+</div>
+
+</body>
+</html>

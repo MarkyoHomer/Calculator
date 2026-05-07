@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rental Tax Calculator</title>
+  <link rel="stylesheet" href="scripts/general.css">
+  <link rel="stylesheet" href="scripts/sidebar.css">
+  <style>
+    .scenario-select {
+      width: 100%;
+      padding: 7px 8px;
+      font-size: 12px;
+      border: 1px solid #8b8bde;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      color: #333;
+      background: rgb(223, 217, 252);
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .scenario-select:focus { outline: 2px solid #8b8bde; }
+
+    .ledger {
+      background: rgb(243, 237, 250);
+      border: 1px solid rgb(222, 211, 234);
+      border-radius: 0 0 4px 4px;
+      padding: 6px 10px 8px;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    .ledger-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 2px 0;
+    }
+    .ledger-row .l-label { color: #333; }
+    .ledger-row .l-prefix {
+      font-style: italic;
+      color: #7a6a00;
+      min-width: 36px;
+      font-size: 11px;
+    }
+    .ledger-row .l-left {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      flex: 1;
+    }
+    .ledger-row .l-value {
+      font-family: monospace;
+      font-size: 12px;
+      min-width: 110px;
+      text-align: right;
+    }
+    .ledger-divider {
+      border: none;
+      border-top: 1px solid #c9b8e8;
+      margin: 3px 0;
+    }
+    .ledger-divider.double {
+      border-top: 3px double #9b7fd4;
+      margin: 4px 0;
+    }
+    .ledger-row.total .l-label,
+    .ledger-row.total .l-value {
+      font-weight: bold;
+      color: #3a1a8a;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    .field-row label { width: 200px; flex-shrink: 0; }
+    .field-row input[type="number"] {
+      width: 160px;
+      padding: 3px 5px;
+      font-size: 12px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin: 0;
+    }
+    .field-row input[type="number"]:disabled {
+      background: #f0f0f0;
+      color: #aaa;
+      border-color: #ddd;
+      cursor: not-allowed;
+    }
+
+    .info-note {
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+    .input-toggle {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      background: #f0eeff;
+      border: 1px solid #d5cff5;
+      border-radius: 4px;
+      padding: 5px 8px;
+    }
+    .input-toggle span { font-weight: bold; color: #555; margin-right: 4px; }
+    .input-toggle label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      width: auto;
+    }
+
+    /* ── Formula guide — always visible ── */
+    .formula-box {
+      background: #fffbe6;
+      border: 1px solid #e8d96a;
+      border-radius: 4px;
+      padding: 8px 10px;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #444;
+      line-height: 1.6;
+    }
+    .formula-box .f-title {
+      font-weight: bold;
+      color: #7a6a00;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+    .formula-box .f-section { margin-bottom: 3px; }
+    .formula-box code {
+      background: #f5f0cc;
+      border-radius: 3px;
+      padding: 1px 4px;
+      font-size: 11px;
+      font-family: monospace;
+      display: inline-block;
+    }
+    .f-sub { color: #888; font-style: italic; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <h3>Calculators</h3>
+  </div>
+  <ul class="sidebar-menu">
+    <li class="sidebar-item">
+      <a href="index.html" class="sidebar-link">
+        <span class="sidebar-icon">🏠</span>
+        <span class="sidebar-text">Home</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a href="bcas-incentives-calculator.html" class="sidebar-link">
+        <span class="sidebar-icon">💰</span>
+        <span class="sidebar-text">BCAS Incentives</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a href="rental-tax-calculator.html" class="sidebar-link active">
+        <span class="sidebar-icon">📊</span>
+        <span class="sidebar-text">Rental Tax</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- Main Content -->
+<div class="main-content">
+
+<div id="notification" style="display: none;"></div>
+
+<div class="calculator">
+  <h3 style="text-align:center; margin-top: 10px;">Rental Tax Calculator</h3>
+
+  <fieldset style="padding: 10px; margin-left: 3px; border-radius: 5px;">
+
+    <p style="font-weight: bold; font-size: 13px; margin-top: 0px;">Select Scenario:</p>
+    <select id="scenarioSelect" class="scenario-select" onchange="switchScenario()">
+      <option value="1">Scenario 1 — VAT Inclusive, No Withholding Tax</option>
+      <option value="2">Scenario 2 — VAT Inclusive, With Withholding Tax</option>
+      <option value="3">Scenario 3 — VAT Exclusive, No Withholding Tax</option>
+      <option value="4">Scenario 4 — VAT Exclusive, With Withholding Tax</option>
+      <option value="5">Scenario 5 — No VAT, With Withholding Tax</option>
+    </select>
+
+    <p id="infoNote" class="info-note"></p>
+
+    <!-- Input mode toggle -->
+    <div class="input-toggle">
+      <span>Input:</span>
+      <label><input type="radio" name="mode" value="rent" checked onchange="compute()"> Rent Amount</label>
+      <label><input type="radio" name="mode" value="net" onchange="compute()"> Net Payable</label>
+    </div>
+
+    <!-- Rent amount field -->
+    <div class="field-row">
+      <label id="rentLabel">Rental Amount:</label>
+      <input type="number" id="rentInput" placeholder="0.00" oninput="compute()">
+    </div>
+
+    <!-- W/Tax rate field -->
+    <div class="field-row">
+      <label>Withholding Tax Rate (%):</label>
+      <input type="number" id="wtRate" placeholder="0" value="5" oninput="compute()">
+    </div>
+
+    <!-- Ledger -->
+    <div class="ledger">
+      <div class="ledger-row" id="row_base">
+        <div class="l-left"><span class="l-prefix"></span><span class="l-label" id="lbl_base">Tax Base</span></div>
+        <span class="l-value" id="val_base">0.00</span>
+      </div>
+      <div class="ledger-row" id="row_vat">
+        <div class="l-left"><span class="l-prefix">Add:</span><span class="l-label">VAT Amount (12%)</span></div>
+        <span class="l-value" id="val_vat">0.00</span>
+      </div>
+      <hr class="ledger-divider">
+      <div class="ledger-row">
+        <div class="l-left"><span class="l-prefix"></span><span class="l-label" id="lbl_gross">Gross Amount (Base + VAT)</span></div>
+        <span class="l-value" id="val_gross">0.00</span>
+      </div>
+      <div class="ledger-row">
+        <div class="l-left"><span class="l-prefix">Less:</span><span class="l-label">Withholding Tax</span></div>
+        <span class="l-value" id="val_wt">—</span>
+      </div>
+      <hr class="ledger-divider double">
+      <div class="ledger-row total">
+        <div class="l-left"><span class="l-prefix"></span><span class="l-label">Net Amount Payable</span></div>
+        <span class="l-value" id="val_net">0.00</span>
+      </div>
+    </div>
+
+    <!-- Always-visible formula guide -->
+    <div class="formula-box" id="guideBox">
+      <span class="f-sub">Enter a value above to see the step-by-step computation.</span>
+    </div>
+
+   <!--button type="button" class="button-blue"
+      style="width: 80px; height: 30px; font-size:12px; float:right; padding: 3px; margin-top: 8px;"
+      onclick="resetAll()">Reset</button> --> 
+
+  </fieldset>
+</div>
+
+<script>
+  // Scenario config
+  const SCENARIOS = {
+    1: {
+      info: 'Rental amount already includes VAT. No withholding tax deducted.',
+      hasVAT: true, vatInclusive: true, hasWT: false,
+      rentLabel: { rent: 'Rental Amount (VAT Inclusive):', net: 'Net Amount Payable:' }
+    },
+    2: {
+      info: 'Rental amount already includes VAT. Withholding tax is deducted from the tax base.',
+      hasVAT: true, vatInclusive: true, hasWT: true,
+      rentLabel: { rent: 'Rental Amount (VAT Inclusive):', net: 'Net Amount Payable:' }
+    },
+    3: {
+      info: 'Rental amount does not include VAT. VAT is added on top. No withholding tax.',
+      hasVAT: true, vatInclusive: false, hasWT: false,
+      rentLabel: { rent: 'Rental Base Amount (ex-VAT):', net: 'Total Amount Payable (incl. VAT):' }
+    },
+    4: {
+      info: 'Rental amount does not include VAT. VAT added on top. Withholding tax deducted from base.',
+      hasVAT: true, vatInclusive: false, hasWT: true,
+      rentLabel: { rent: 'Rental Base Amount (ex-VAT):', net: 'Net Amount Payable:' }
+    },
+    5: {
+      info: 'Rental amount has no VAT. Withholding tax is deducted directly from the rent amount.',
+      hasVAT: false, vatInclusive: false, hasWT: true,
+      rentLabel: { rent: 'Rental Amount:', net: 'Net Amount Payable:' }
+    }
+  };
+
+  function getScenario() {
+    return parseInt(document.getElementById('scenarioSelect').value);
+  }
+
+  function getMode() {
+    return document.querySelector('input[name="mode"]:checked')?.value || 'rent';
+  }
+
+  function fmt(n) {
+    return n.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function setTxt(id, v) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = v;
+  }
+
+  function switchScenario() {
+    const s = getScenario();
+    const cfg = SCENARIOS[s];
+    const mode = getMode();
+
+    // Update info note
+    document.getElementById('infoNote').textContent = cfg.info;
+
+    // Update rent label
+    document.getElementById('rentLabel').textContent = cfg.rentLabel[mode];
+
+    // W/Tax rate field: disable & zero if no W/Tax
+    const wtEl = document.getElementById('wtRate');
+    if (cfg.hasWT) {
+      wtEl.disabled = false;
+      if (!wtEl.value || wtEl.value === '0') wtEl.value = 5;
+    } else {
+      wtEl.disabled = true;
+      wtEl.value = 0;
+    }
+
+    // VAT rows visibility
+    document.getElementById('row_vat').style.opacity = cfg.hasVAT ? '1' : '0.3';
+    document.getElementById('row_base').querySelector('.l-label').textContent =
+      cfg.hasVAT ? 'Rent (Tax Base)' : 'Rent (Tax Base)';
+
+    // Recompute with existing input value
+    compute();
+  }
+
+  function buildGuide(title, steps, backNote) {
+    const box = document.getElementById('guideBox');
+    let html = `<div class="f-title">📌 ${title}</div>`;
+    if (backNote) {
+      html += `<div class="f-section f-sub" style="margin-bottom:4px;">🔁 ${backNote}</div>`;
+      html += `<hr style="border:none;border-top:1px dashed #d4c96a;margin:4px 0;">`;
+    }
+    steps.forEach(s => {
+      if (s.type === 'divider') {
+        html += `<hr style="border:none;border-top:1px dashed #d4c96a;margin:4px 0;">`;
+      } else if (s.type === 'note') {
+        html += `<div class="f-section f-sub">${s.text}</div>`;
+      } else if (s.type === 'header') {
+        html += `<div class="f-section"><strong>${s.text}</strong></div>`;
+      } else {
+        html += `<div class="f-section"><code>${s.text}</code></div>`;
+      }
+    });
+    box.innerHTML = html;
+  }
+
+  function compute() {
+    const s = getScenario();
+    const cfg = SCENARIOS[s];
+    const mode = getMode();
+    const inputVal = parseFloat(document.getElementById('rentInput').value) || 0;
+    const rate = cfg.hasWT ? (parseFloat(document.getElementById('wtRate').value) || 0) / 100 : 0;
+    const ratePct = (rate * 100) + '%';
+
+    // Update rent label dynamically on mode change
+    document.getElementById('rentLabel').textContent = cfg.rentLabel[mode];
+
+    // W/Tax field state
+    const wtEl = document.getElementById('wtRate');
+    wtEl.disabled = !cfg.hasWT;
+    if (!cfg.hasWT) wtEl.value = 0;
+
+    if (inputVal === 0) {
+      document.getElementById('guideBox').innerHTML =
+        '<span class="f-sub">Enter a value above to see the step-by-step computation.</span>';
+      return;
+    }
+
+    let base, vat, gross, wt, net, rental;
+
+    // ── Scenario 1: VAT Inclusive, No W/Tax ──
+    if (s === 1) {
+      rental = inputVal; // same for both modes (net = rental when no W/Tax)
+      base  = rental / 1.12;
+      vat   = rental - base;
+      gross = rental;
+      wt    = 0;
+      net   = rental;
+
+      setTxt('val_base', fmt(base));
+      setTxt('val_vat', fmt(vat));
+      setTxt('val_gross', fmt(gross));
+      setTxt('val_wt', '—');
+      setTxt('val_net', fmt(net));
+
+      const given = mode === 'net' ? `Net Payable = ₱${fmt(inputVal)}` : `Rent Amount (VAT Inclusive) = ₱${fmt(inputVal)}`;
+      buildGuide('Scenario 1 — VAT Inclusive, No Withholding Tax', [
+        { type: 'header', text: `Given: ${given}` },
+        { type: 'divider' },
+        { text: `Rent (Tax Base) = ${fmt(rental)} ÷ 1.12 = ₱${fmt(base)}` },
+        { text: `VAT Amount = ${fmt(rental)} − ${fmt(base)} = ₱${fmt(vat)}` },
+        { text: `Gross Amount = ${fmt(base)} + ${fmt(vat)} = ₱${fmt(gross)}` },
+        { type: 'note', text: 'No withholding tax deducted.' },
+        { text: `Net Amount Payable = ₱${fmt(net)}` },
+      ]);
+    }
+
+    // ── Scenario 2: VAT Inclusive, With W/Tax ──
+    if (s === 2) {
+      if (mode === 'rent') {
+        rental = inputVal;
+        base   = rental / 1.12;
+        vat    = rental - base;
+        gross  = rental;
+        wt     = base * rate;
+        net    = gross - wt;
+      } else {
+        net    = inputVal;
+        rental = net / (1 - rate / 1.12);
+        base   = rental / 1.12;
+        vat    = rental - base;
+        gross  = rental;
+        wt     = base * rate;
+      }
+      setTxt('val_base', fmt(base));
+      setTxt('val_vat', fmt(vat));
+      setTxt('val_gross', fmt(gross));
+      setTxt('val_wt', fmt(wt));
+      setTxt('val_net', fmt(net));
+
+      const backNote = mode === 'net'
+        ? `Gross Rent = Net ÷ (1 − ${ratePct} ÷ 1.12) = ${fmt(net)} ÷ ${fmt(1 - rate/1.12)} = ₱${fmt(rental)}`
+        : null;
+      const given = mode === 'net'
+        ? `Net Payable = ₱${fmt(net)} | W/Tax Rate = ${ratePct}`
+        : `Rent Amount (VAT Inclusive) = ₱${fmt(rental)} | W/Tax Rate = ${ratePct}`;
+      buildGuide('Scenario 2 — VAT Inclusive, With Withholding Tax', [
+        { type: 'header', text: `Given: ${given}` },
+        { type: 'divider' },
+        { text: `Rent (Tax Base) = ${fmt(rental)} ÷ 1.12 = ₱${fmt(base)}` },
+        { text: `VAT Amount = ${fmt(rental)} − ${fmt(base)} = ₱${fmt(vat)}` },
+        { text: `Gross Amount = ${fmt(base)} + ${fmt(vat)} = ₱${fmt(gross)}` },
+        { text: `Withholding Tax = ${fmt(base)} × ${ratePct} = ₱${fmt(wt)}` },
+        { text: `Net Amount Payable = ${fmt(gross)} − ${fmt(wt)} = ₱${fmt(net)}` },
+      ], backNote);
+    }
+
+    // ── Scenario 3: VAT Exclusive, No W/Tax ──
+    if (s === 3) {
+      if (mode === 'rent') {
+        base  = inputVal;
+        vat   = base * 0.12;
+        gross = base + vat;
+        net   = gross;
+      } else {
+        net   = inputVal;
+        base  = net / 1.12;
+        vat   = base * 0.12;
+        gross = base + vat;
+      }
+      setTxt('val_base', fmt(base));
+      setTxt('val_vat', fmt(vat));
+      setTxt('val_gross', fmt(gross));
+      setTxt('val_wt', '—');
+      setTxt('val_net', fmt(net));
+
+      const backNote = mode === 'net'
+        ? `Rent Base = Total Payable ÷ 1.12 = ${fmt(net)} ÷ 1.12 = ₱${fmt(base)}`
+        : null;
+      const given = mode === 'net' ? `Total Payable = ₱${fmt(net)}` : `Rent Base (ex-VAT) = ₱${fmt(base)}`;
+      buildGuide('Scenario 3 — VAT Exclusive, No Withholding Tax', [
+        { type: 'header', text: `Given: ${given}` },
+        { type: 'divider' },
+        { text: `Rent (Tax Base) = ₱${fmt(base)}` },
+        { text: `VAT Amount = ${fmt(base)} × 12% = ₱${fmt(vat)}` },
+        { text: `Gross Amount = ${fmt(base)} + ${fmt(vat)} = ₱${fmt(gross)}` },
+        { type: 'note', text: 'No withholding tax deducted.' },
+        { text: `Net Amount Payable = ₱${fmt(net)}` },
+      ], backNote);
+    }
+
+    // ── Scenario 4: VAT Exclusive, With W/Tax ──
+    if (s === 4) {
+      if (mode === 'rent') {
+        base  = inputVal;
+        vat   = base * 0.12;
+        gross = base + vat;
+        wt    = base * rate;
+        net   = gross - wt;
+      } else {
+        net   = inputVal;
+        base  = net / (1.12 - rate);
+        vat   = base * 0.12;
+        gross = base + vat;
+        wt    = base * rate;
+      }
+      setTxt('val_base', fmt(base));
+      setTxt('val_vat', fmt(vat));
+      setTxt('val_gross', fmt(gross));
+      setTxt('val_wt', fmt(wt));
+      setTxt('val_net', fmt(net));
+
+      const backNote = mode === 'net'
+        ? `Rent Base = Net ÷ (1.12 − ${ratePct}) = ${fmt(net)} ÷ ${fmt(1.12 - rate)} = ₱${fmt(base)}`
+        : null;
+      const given = mode === 'net'
+        ? `Net Payable = ₱${fmt(net)} | W/Tax Rate = ${ratePct}`
+        : `Rent Base (ex-VAT) = ₱${fmt(base)} | W/Tax Rate = ${ratePct}`;
+      buildGuide('Scenario 4 — VAT Exclusive, With Withholding Tax', [
+        { type: 'header', text: `Given: ${given}` },
+        { type: 'divider' },
+        { text: `Rent (Tax Base) = ₱${fmt(base)}` },
+        { text: `VAT Amount = ${fmt(base)} × 12% = ₱${fmt(vat)}` },
+        { text: `Gross Amount = ${fmt(base)} + ${fmt(vat)} = ₱${fmt(gross)}` },
+        { text: `Withholding Tax = ${fmt(base)} × ${ratePct} = ₱${fmt(wt)}` },
+        { text: `Net Amount Payable = ${fmt(gross)} − ${fmt(wt)} = ₱${fmt(net)}` },
+      ], backNote);
+    }
+
+    // ── Scenario 5: No VAT, With W/Tax ──
+    if (s === 5) {
+      if (mode === 'rent') {
+        gross = inputVal;
+        wt    = gross * rate;
+        net   = gross - wt;
+      } else {
+        net   = inputVal;
+        gross = net / (1 - rate);
+        wt    = gross * rate;
+      }
+      setTxt('val_base', fmt(gross));
+      setTxt('val_vat', '—');
+      setTxt('val_gross', fmt(gross));
+      setTxt('val_wt', fmt(wt));
+      setTxt('val_net', fmt(net));
+
+      const backNote = mode === 'net'
+        ? `Rent = Net ÷ (1 − ${ratePct}) = ${fmt(net)} ÷ ${fmt(1 - rate)} = ₱${fmt(gross)}`
+        : null;
+      const given = mode === 'net'
+        ? `Net Payable = ₱${fmt(net)} | W/Tax Rate = ${ratePct}`
+        : `Rent Amount = ₱${fmt(gross)} | W/Tax Rate = ${ratePct}`;
+      buildGuide('Scenario 5 — No VAT, With Withholding Tax', [
+        { type: 'header', text: `Given: ${given}` },
+        { type: 'divider' },
+        { type: 'note', text: 'No VAT — Tax Base equals the Rent Amount (Gross Amount).' },
+        { text: `Rent (Tax Base) = Gross Amount = ₱${fmt(gross)}` },
+        { text: `Withholding Tax = ${fmt(gross)} × ${ratePct} = ₱${fmt(wt)}` },
+        { text: `Net Amount Payable = ${fmt(gross)} − ${fmt(wt)} = ₱${fmt(net)}` },
+      ], backNote);
+    }
+  }
+
+  // function resetAll() {
+   // document.getElementById('rentInput').value = '';
+   // const wtEl = document.getElementById('wtRate');
+  //  const s = getScenario();
+  //  wtEl.value = SCENARIOS[s].hasWT ? 5 : 0;
+ //   document.querySelector('input[name="mode"][value="rent"]').checked = true;
+ //   switchScenario();
+ // }
+
+  // Init on load
+  switchScenario();
+</script>
+
+</body>
+</html>
