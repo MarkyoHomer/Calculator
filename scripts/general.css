@@ -208,3 +208,110 @@ padding-left: 5px;
     100% { opacity: 0; transform: translateY(-10px); }
   }
 
+
+
+/* =========================================== */
+/* RESPONSIVE STYLES */
+/* =========================================== */
+
+/* Responsive table wrapper */
+@media (max-width: 768px) {
+  .bcasentries {
+    max-height: 300px;
+    font-size: 11px;
+  }
+  
+  .bcasentries th,
+  .bcasentries td {
+    padding: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  
+  .bcasentries th {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  
+  .dropdown input {
+    font-size: 12px;
+    padding: 8px;
+    padding-right: 25px;
+  }
+  
+  .dropdown .arrow {
+    font-size: 20px;
+  }
+  
+  .dropdown-list div {
+    padding: 8px;
+    font-size: 12px;
+  }
+  
+  .row {
+    gap: 10px;
+  }
+  
+  .button-blue {
+    padding: 6px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bcasentries {
+    max-height: 250px;
+    font-size: 10px;
+  }
+  
+  .bcasentries th,
+  .bcasentries td {
+    padding: 3px;
+    font-size: 10px;
+  }
+  
+  #employeetable td:first-child,
+  #employeetable th:first-child {
+    width: 40px;
+  }
+  
+  .dropdown input {
+    font-size: 11px;
+    padding: 6px;
+    padding-right: 20px;
+  }
+  
+  .dropdown .arrow {
+    font-size: 16px;
+    right: 6px;
+  }
+  
+  .dropdown-list {
+    top: 28px;
+    max-height: 150px;
+  }
+  
+  .dropdown-list div {
+    padding: 6px;
+    font-size: 11px;
+  }
+}
+
+/* Notification responsive */
+@media (max-width: 480px) {
+  #notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    padding: 10px 12px;
+  }
+  
+  #notification .icon {
+    font-size: 16px;
+  }
+  
+  #notification .message {
+    font-size: 12px;
+  }
+}
