@@ -42,9 +42,11 @@
       margin-left: 0 !important;
     }
     
-    /* Count input fields - responsive sizing */
+    /* Count input fields - fixed sizing for desktop */
     .count-input {
       box-sizing: border-box;
+      width: 120px;
+      min-width: 100px;
     }
     
     /* Fixed size for delete button */
@@ -79,17 +81,10 @@
         margin-left: 0 !important;
       }
       
-      /* Make inputs fill available space in fulltime mode (when PM column is hidden) */
+      /* Count inputs for mobile - medium size */
       #PEPPbracket .count-input {
-        width: 100% !important;
-        max-width: none !important;
+        width: 100px !important;
         min-width: 80px !important;
-      }
-      
-      /* When PM column is visible (halfday mode), keep inputs smaller */
-      #PEPPbracket tbody td[id$="C2"]:not([style*="display: none"]) + td .count-input,
-      #PEPPbracket tbody td[id$="C2"][style*="display: table-cell"] ~ td .count-input {
-        max-width: 120px !important;
       }
     }
     
@@ -136,13 +131,12 @@
         font-size: 11px !important;
       }
       
-      /* Ensure inputs are wide enough in mobile fulltime mode */
+      /* Ensure inputs are wide enough in small mobile */
       #PEPPbracket .count-input {
-        width: 100% !important;
-        max-width: none !important;
-        min-width: 90px !important;
+        width: 90px !important;
+        min-width: 70px !important;
         font-size: 12px !important;
-        height: 28px !important;
+        height: 26px !important;
       }
     }
   </style>
