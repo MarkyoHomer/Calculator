@@ -434,6 +434,23 @@ html, body {
     margin-left: auto !important;
     text-align: right !important;
   }
+  
+  /* BCAS form row responsive */
+  .bcas-form-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .bcas-form-row select,
+  .bcas-form-row button {
+    width: 100% !important;
+  }
+  
+  .bcas-total-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 4px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -461,5 +478,25 @@ html, body {
   
   .calculator button {
     font-size: 10px !important;
+  }
+  
+  /* BCAS specific mobile sizes */
+  .bcas-form-row select {
+    font-size: 11px !important;
+    padding: 6px 4px !important;
+  }
+  
+  .bcas-form-row button {
+    font-size: 11px !important;
+    padding: 6px 8px !important;
+  }
+  
+  #totalIncentive,
+  #totalIncentives {
+    font-size: 11px !important;
+  }
+  
+  #totaltrxcount {
+    font-size: 11px !important;
   }
 }
