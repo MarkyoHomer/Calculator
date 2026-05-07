@@ -6,8 +6,119 @@
   <title>BCAS Incentives Calculator</title>
   <link rel="stylesheet" href="scripts/general.css">
   <link rel="stylesheet" href="scripts/sidebar.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    /* BCAS Calculator Mobile Styles */
+    .bcas-form-group {
+      margin-bottom: 10px;
+    }
+    
+    .bcas-form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    
+    .bcas-form-row select {
+      flex: 1;
+      min-width: 120px;
+    }
+    
+    .bcas-total-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 8px 10px;
+      flex-wrap: nowrap;
+      gap: 5px;
+    }
+    
+    .bcas-total-row p {
+      margin: 4px 0;
+    }
+    
+    #totalIncentives {
+      margin-left: 0 !important;
+    }
+    
+    /* Fixed size for delete button */
+    #employeetable button {
+      min-width: 20px !important;
+      max-width: 20px !important;
+      min-height: 20px !important;
+      max-height: 20px !important;
+      padding: 0 !important;
+      font-size: 10px !important;
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .bcas-form-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .bcas-form-row select,
+      .bcas-form-row button {
+        width: 100% !important;
+      }
+      
+      .bcas-total-row {
+        justify-content: center;
+        text-align: center;
+        gap: 8px;
+      }
+      
+      #totalIncentives {
+        margin-left: 0 !important;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .calculator fieldset {
+        padding: 8px !important;
+      }
+      
+      .calculator h3 {
+        font-size: 14px !important;
+      }
+      
+      .calculator p {
+        font-size: 11px !important;
+      }
+      
+      .bcas-form-row select {
+        font-size: 11px !important;
+        padding: 6px 4px !important;
+      }
+      
+      .bcas-form-row button {
+        font-size: 11px !important;
+        padding: 6px 8px !important;
+      }
+      
+      #totalIncentive,
+      #totalIncentives {
+        font-size: 14px !important;
+      }
+      
+      #totaltrxcount {
+        font-size: 14px !important;
+      }
+      
+      .dropdown input {
+        font-size: 11px !important;
+        padding: 6px 8px !important;
+        height: 32px !important;
+      }
+      
+      .button-blue {
+        height: 28px !important;
+        font-size: 11px !important;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -41,213 +152,148 @@
 <!-- Main Content -->
 <div class="main-content">
 
-
 <div id="notification" style="display: none;"></div>
 
 <div class="calculator">
   <h3 style="text-align:center; margin-top: 10px;">BCAS Incentives Calculator</h3>
 
- <fieldset style="padding: 10px;margin-left:3px; border-radius: 5px; ">
-<p  style="font-weight: bold; font-size: 13px; margin-top: 0px;">Add duty employee roles: </p>
+  <fieldset style="padding: 10px; border-radius: 5px;">
+    <p style="font-weight: bold; font-size: 13px; margin-top: 0px;">Add duty employee roles: </p>
 
-   <div class="row" style="width: 450px;">
+    <div class="bcas-form-row">
+      <select id="employeerole" style="font-size:12px;">
+        <option value="" disabled selected hidden>Employee Role</option>
+      </select>
 
-<select id="employeerole" style="width: 300px; font-size:12px;">
-  <option value="" disabled selected hidden>Employee Role</option>
-</select>
+      <select id="employeesched" style="font-size:12px;">
+        <option value="" disabled selected hidden>Schedule</option>
+      </select>
 
-<select id="employeesched" style="width: 150px; font-size:12px;">
-  <option value="" disabled selected hidden>Schedule</option>
-</select>
+      <button type="button" style="font-size:12px;" onclick="add()">Add</button>
+    </div>
 
- <button type="button" style="width: 100px;font-size:12px;"" onclick="add()">Add</button>
- </div>  
+    <table id="employeetable" class="bcasentries">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>Employee Role</th>
+          <th>Schedule</th>
+          <th>Incentives</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
 
-                 <table id="employeetable" class="bcasentries" >
-                      <thead >
-                        <tr >
-                        <th>Action</th>
-                        <th>Employee Role</th>
-                        <th>Schedule</th>
-                        <th>Incentives</th>
-                       </tr>
-                      </thead>
-                      <tbody>
-                       
-                      </tbody>
-                 </table>
-         
-      <fieldset style="width: 450px; border: 1px solid rgb(232, 223, 242); border-top: none;background-color: rgb(243, 237, 250);
-                padding:0px;padding-bottom: 2px;margin:0; margin-bottom: 10px; ">     
-           <div class="row" style="width: 450px; padding:0px;">
-            <p id="totalIncentive" style=" font-size: 12px;font-weight: bold; margin-left:10px; margin-bottom: 2px;">Total Incentives: </p> 
-            <p  id="totalIncentives" style=" font-size: 12px; font-weight: bold; margin-left:258px; margin-bottom: 0px;"> 0.00 </p>  
-           </div>
-      </fieldset>
+    <fieldset style="border: 1px solid rgb(232, 223, 242); border-top: none; background-color: rgb(243, 237, 250); padding: 0; margin-bottom: 10px;">
+      <div class="bcas-total-row">
+        <p id="totalIncentive" style="font-size: 12px; font-weight: bold;">Total Incentives: </p>
+        <p id="totalIncentives" style="font-size: 12px; font-weight: bold;"> 0.00 </p>
+      </div>
+    </fieldset>
 
+    <div class="bcas-form-group">
+      <div class="dropdown" style="font-size: 12px; height: 35px; position: relative;">
+        <input
+          type="text"
+          id="Area"
+          placeholder="Select Incentive"
+          style="font-size: 12px; width: 100%; height: 100%; box-sizing: border-box;"
+          onkeyup="filterDropdownarearecon()"
+          onclick="toggleDropdownarearecon()"
+          autocomplete="off"
+        />
+        <span class="arrow" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">&#129171;</span>
 
+        <div id="dropdownList-arearecon" class="dropdown-list" style="display:none; max-height: 200px; overflow-y: auto; position: absolute; width: 100%; background: white; border: 1px solid #ccc; z-index: 100;">
+          <!-- Items will be dynamically added here -->
+        </div>
+      </div>
+    </div>
 
+    <table id="PEPPbracket" class="bcasentries" style="margin-top: 10px; min-height: 0px;">
+      <thead>
+        <tr id="R0">
+          <th id="Principal">Pincipal</th>
+          <th id="Count">Count</th>
+          <th id="Countpm" style="display: none;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="R1" style="display: none;">
+          <td id="p1"> 01-100 </td>
+          <td id="R1C1" style="text-align: right;">
+            <input type="number" id="num1" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+          <td id="R1C2" style="text-align: right;">
+            <input type="number" id="num12" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+        </tr>
 
+        <tr id="R2" style="display: none;">
+          <td id="p2"> 101-200 </td>
+          <td id="R2C1" style="text-align: right;">
+            <input type="number" id="num2" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+          <td id="R2C2" style="text-align: right;">
+            <input type="number" id="num22" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+        </tr>
 
+        <tr id="R3" style="display: none;">
+          <td id="p3"> 201-300 </td>
+          <td id="R3C1" style="text-align: right;">
+            <input type="number" id="num3" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+          <td id="R3C2" style="text-align: right;">
+            <input type="number" id="num32" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+        </tr>
 
-  <div class="row" style="width: 450px;">
-                             
-  <div class="dropdown" style="width:350px; font-size: 12px; height: 35px; position: relative;">
-  <input 
-    type="text" 
-    id="Area" 
-    placeholder="Select Incentive" 
-    style="font-size: 12px; width: 100%; height: 100%; box-sizing: border-box;" 
-    onkeyup="filterDropdownarearecon()" 
-    onclick="toggleDropdownarearecon()"
-    autocomplete="off"
-  />
-  <span class="arrow" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">&#129171;</span>
-  
-  <div id="dropdownList-arearecon" class="dropdown-list" style="display:none; max-height: 200px; overflow-y: auto; position: absolute; width: 100%; background: white; border: 1px solid #ccc; z-index: 100;">
-    <!-- Items will be dynamically added here -->
-  </div>
-</div>
+        <tr id="R4" style="display: none;">
+          <td id="p4"> 301-500 </td>
+          <td id="R4C1" style="text-align: right;">
+            <input type="number" id="num4" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+          <td id="R4C2" style="text-align: right;">
+            <input type="number" id="num42" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+        </tr>
 
+        <tr id="R5" style="display: none;">
+          <td id="p5"> 501-1000 </td>
+          <td id="R5C1" style="text-align: right;">
+            <input type="number" id="num5" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+          <td id="R5C2" style="text-align: right;">
+            <input type="number" id="num52" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+        </tr>
 
- </div>
+        <tr id="R6" style="display: none;">
+          <td id="p6"> 1001-999999 </td>
+          <td id="R6C1" style="text-align: right;">
+            <input type="number" id="num6" placeholder="0.00" oninput="computetotal()" style="display: inline-block; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+          <td id="R6C2" style="text-align: right;">
+            <input type="number" id="num62" placeholder="0.00" oninput="computetotal()" style="display: none; width: 120px; font-size: 12px; height: 24px;">
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
- 
+    <fieldset style="border: 1px solid rgb(222, 211, 234); border-top: none; background-color: rgb(243, 237, 250); padding: 0; margin-bottom: 10px;">
+      <p id="totaltrxcount" style="font-weight: bold; font-size: 12px; margin: 5px;">Total Count: 0</p>
+    </fieldset>
 
-
-   
-    <table id="PEPPbracket" class="bcasentries"  style="margin-top: 10px; min-height: 0px;" >
-                      <thead >
-                        <tr id="R0" >
-                        <th id ="Principal" >Pincipal</th>        
-                        <th id ="Count">Count</th>
-                        <th id ="Countpm" style="display: none;"></th>
-               
-                      
-                       </tr>
-                      </thead>
-                      <tbody>
-                       
-                      <tr id="R1" style="display: none;">
-                          <td id="p1"> 01-100 </td>
-                   
-
-                            <td id="R1C1" style="text-align: right;">
-                              <input type="number" id="num1" placeholder="0.00" oninput="computetotal()"
-                               style="display: inline-block; width: 80px; font-size: 12px; height: 20px;">
-                             </td>
-
-                            <td id ="R1C2" style="text-align: right;">
-                              <input type="number" id="num12" placeholder="0.00" oninput="computetotal()"
-                                    style="display: none; width: 80px; font-size: 12px; height: 20px;">
-                          </td>
-                      </tr>
-
-                      <tr id="R2"style="display: none;">
-                          <td id="p2"> 101-200 </td>
-  
-
-                            <td id ="R2C1" style="text-align: right;">
-                              <input type="number" id="num2" placeholder="0.00" oninput="computetotal()"
-                                    style="display: inline-block; width: 80px; font-size: 12px; height: 20px;">
-                          </td>
-
-                            <td id ="R2C2" style="text-align: right;">
-                              <input type="number" id="num22" placeholder="0.00" oninput="computetotal()"
-                                    style="display: none; width: 80px; font-size: 12px; height: 20px;">
-                          </td>
-                      </tr>
-
-                      <tr id="R3" style="display: none;">
-                          <td id="p3"> 201-300 </td>
-
-
-                            <td id="R3C1" style="text-align: right;">
-                              <input type="number" id="num3" placeholder="0.00" oninput="computetotal()"
-                                    style="display: inline-block; width: 80px; font-size: 12px; height: 20px;">
-                           </td>
-
-                            <td id ="R3C2" style="text-align: right;">
-                              <input type="number" id="num32" placeholder="0.00" oninput="computetotal()"
-                                    style="display: none; width: 80px; font-size: 12px; height: 20px;">
-                          </td>
-                      </tr>
-
-                       <tr id="R4" style="display: none;">
-                          <td id="p4"> 301-500 </td>
-
-
-                            <td id ="R4C1" style="text-align: right;">
-                              <input type="number" id="num4" placeholder="0.00" oninput="computetotal()"
-                                    style="display: inline-block; width: 80px; font-size: 12px; height: 20px;">
-                          </td>
-
-                            <td id ="R4C2" style="text-align: right;">
-                              <input type="number" id="num42" placeholder="0.00" oninput="computetotal()"
-                                    style="display: none; width: 80px; font-size: 12px; height: 20px;">
-                          </td>
-                      </tr>
-                      
-                       <tr id="R5" style="display: none;">
-                          <td id="p5"> 501-1000 </td>
-
-
-                            <td id ="R5C1" style="text-align: right;">
-                              <input type="number" id="num5" placeholder="0.00" oninput="computetotal()"
-                                    style="display: inline-block; width: 80px; font-size: 12px; height: 20px;">
-                          </td>
-
-                            <td id ="R5C2" style="text-align: right;">
-                              <input type="number" id="num52" placeholder="0.00" oninput="computetotal()"
-                                    style="display: none; width: 80px; font-size: 12px; height: 20px;">
-                          </td>
-                      </tr>
-                      
-                      
-
-                       <tr id="R6" style="display: none;">
-                          <td id="p6"> 1001-999999 </td>
-
-
-                            <td id ="R6C1" style="text-align: right;">
-                              <input type="number" id="num6" placeholder="0.00" oninput="computetotal()"
-                                    style="display: inline-block; width: 80px; font-size: 12px; height: 20px;">
-                          </td>
-
-                            <td id ="R6C2" style="text-align: right;">
-                              <input type="number" id="num62" placeholder="0.00" oninput="computetotal()"
-                                    style="display: none; width: 80px; font-size: 12px; height: 20px;">
-                          </td>
-                      </tr>
-
-                      </tbody>
-        </table>
-  
-
-        
-      <fieldset style="width: 450px; border: 1px solid rgb(222, 211, 234); border-top: none;background-color:  rgb(243, 237, 250);
-                padding:0px;padding-bottom: 2px;margin:0; margin-bottom: 10px; ">    
-       <p id="totaltrxcount" style="font-weight: bold; font-size: 12px; margin: 5px;">Total Count: 0</p>   
-      </fieldset>
-
-        <button type="button" class="button-blue" style="width: 80px; height: 30px; font-size:12px; margin-bottom:0px;
-       float:right; padding: 3px;" onclick="calculate()">Calculate</button>
-
-        <!---<button type="button" style="width: 80px; height: 30px; font-size:12px; margin-bottom:0px;
-       float:right; color:black; padding: 3px;
-        border-color: rgb(93, 121, 223); background-color: white;" id ="create">Create</button> ------>
+    <button type="button" class="button-blue" style="height: 30px; font-size:12px; margin-bottom:0px; float:right; padding: 3px;" onclick="calculate()">Calculate</button>
 
   </fieldset>
 
-
 </div>
-
 
 <script src="scripts/dropdown.js"></script>
 <script src="scripts/general.js"></script>
 <script src="scripts/sidebar.js"></script>
-
-
 
 </div>
 </body>
