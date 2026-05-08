@@ -346,6 +346,11 @@
     return n.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
+  // Round to 2 decimal places to avoid floating-point drift in the ledger
+  function r2(n) {
+    return Math.round(n * 100) / 100;
+  }
+
   function setTxt(id, v) {
     const el = document.getElementById(id);
     if (el) el.textContent = v;
@@ -429,8 +434,8 @@
     // ── Scenario 1: VAT Inclusive, No W/Tax ──
     if (s === 1) {
       rental = inputVal; // same for both modes (net = rental when no W/Tax)
-      base  = rental / 1.12;
-      vat   = rental - base;
+      base  = r2(rental / 1.12);
+      vat   = r2(rental - base);
       gross = rental;
       wt    = 0;
       net   = rental;
@@ -457,18 +462,19 @@
     if (s === 2) {
       if (mode === 'rent') {
         rental = inputVal;
-        base   = rental / 1.12;
-        vat    = rental - base;
         gross  = rental;
-        wt     = base * rate;
-        net    = gross - wt;
+        base   = r2(rental / 1.12);
+        vat    = r2(gross - base);
+        wt     = r2(base * rate);
+        net    = r2(gross - wt);
       } else {
+        // Back-calculate: keep entered net exact; wt is the balancing figure
         net    = inputVal;
-        rental = net / (1 - rate / 1.12);
-        base   = rental / 1.12;
-        vat    = rental - base;
+        rental = r2(net / (1 - rate / 1.12));
         gross  = rental;
-        wt     = base * rate;
+        base   = r2(rental / 1.12);
+        vat    = r2(gross - base);
+        wt     = r2(gross - net);
       }
       setTxt('val_base', fmt(base));
       setTxt('val_vat', fmt(vat));
@@ -497,14 +503,17 @@
     if (s === 3) {
       if (mode === 'rent') {
         base  = inputVal;
-        vat   = base * 0.12;
-        gross = base + vat;
+        gross = r2(base * 1.12);
+        // Derive vat from rounded values so base + vat = gross exactly
+        vat   = r2(gross - base);
         net   = gross;
       } else {
         net   = inputVal;
-        base  = net / 1.12;
-        vat   = base * 0.12;
-        gross = base + vat;
+        base  = r2(net / 1.12);
+        gross = r2(base * 1.12);
+        // Derive vat from rounded values so base + vat = gross exactly
+        vat   = r2(gross - base);
+        net   = gross;
       }
       setTxt('val_base', fmt(base));
       setTxt('val_vat', fmt(vat));
@@ -531,16 +540,17 @@
     if (s === 4) {
       if (mode === 'rent') {
         base  = inputVal;
-        vat   = base * 0.12;
-        gross = base + vat;
-        wt    = base * rate;
-        net   = gross - wt;
+        gross = r2(base * 1.12);
+        vat   = r2(gross - base);
+        wt    = r2(base * rate);
+        net   = r2(gross - wt);
       } else {
+        // Back-calculate: keep entered net exact; wt is the balancing figure
         net   = inputVal;
-        base  = net / (1.12 - rate);
-        vat   = base * 0.12;
-        gross = base + vat;
-        wt    = base * rate;
+        base  = r2(net / (1.12 - rate));
+        gross = r2(base * 1.12);
+        vat   = r2(gross - base);
+        wt    = r2(gross - net);
       }
       setTxt('val_base', fmt(base));
       setTxt('val_vat', fmt(vat));
@@ -569,12 +579,13 @@
     if (s === 5) {
       if (mode === 'rent') {
         gross = inputVal;
-        wt    = gross * rate;
-        net   = gross - wt;
+        wt    = r2(gross * rate);
+        net   = r2(gross - wt);
       } else {
+        // Back-calculate: keep entered net exact; wt is the balancing figure
         net   = inputVal;
-        gross = net / (1 - rate);
-        wt    = gross * rate;
+        gross = r2(net / (1 - rate));
+        wt    = r2(gross - net);
       }
       setTxt('val_base', fmt(gross));
       setTxt('val_vat', '—');
